@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>节流和防抖</title>
+
+</head>
+
+<body>
+  <!-- 第一遍 -->
+  <button id="throttle">函数节流</button>
+  <button id="debounce">函数防抖</button>
+  <!-- 第二遍 -->
+  <button id="throttle_ratio">节流</button>
+  <button id="anti_shake">防抖</button>
+  <!-- 第三遍 -->
+  <button id="throttleDate">节流</button>
+  <button id="invalid">函数防抖</button>
+
+
+  <script type="text/javascript">
+    //节流的函数
+    function throttle(callback, time) {
+      //保证第一次事件必然调用回调
+      let start = 0
+      return function (...args) {
+        console.log('throttle 事件')
+        //当前时间
+        const current = Date.now()
+        //满足条件才调用
+        if (current - start > time) {
+          //准备调用之前，当前时间保存到start
+          start = current
+          callback.apply(this,args)
+        }
+      }
+    }
+
+    //节流函数
+    function throttle_ratio(callback, time) {
+      let start = 0
+      return function(...args){
+        console.log('throttle_ratio 事件')
+        const current2=Date.now()
+        if(current2-start>time){
+          start=current2
+          callback.apply(this,args)
+        }
+      }
+    }
+
+    //节流函数
+    function throttleDate(callback,time){
+      let start=0
+      return function(...args){
+        console.log('invalid 事件')
+
+        //当前时间
+        const current3=Date.now()
+
+        //满足条件才调用
+        if(current3-start>time){
+          start=current3
+          callback.apply(this,args)
+        }
+      }
+    }
+
+    //防抖函数
+    function debounce(callback,time){
+      return function(...args){
+        console.log('debounce事件')
+        //清除上一次未完成的定时器
+        if(callback.timeId){
+          clearTimeout(callback.timeId)
+        }
+        callback.timeId=setTimeout(()=>{
+          //删除保存的定时器id标识
+          delete callback.timeId
+          //延迟调用
+          callback.apply(this,args)
+        },time);
+      }
+    }
+
+    //函数防抖
+    function anti_shake(callback,time){
+      return function(...args){
+        console.log('anti_shake')
+        //清除上一次未完成的定时器
+        if(callback.timeId){
+          clearTimeout(callback.timeId)
+        }
+        callback.timeId=setTimeout(()=>{
+          //删除保存的定时器id标识
+          delete callback.timeId
+          //延迟调用
+          callback.apply(this,args)
+        },time);
+      }
+    }
+
+    //函数防抖
+    function invalid(callback,time){
+      return function(...args){
+        console.log("invalid 事件")
+        //清除上一次未完成的定时器
+        if(callback.timeId){
+          clearTimeout(callback.timeId)
+        }
+        callback.timeId=setTimeout(()=>{
+          //删除保存的定时器id标识
+          delete callback.timeId
+          //延迟调用
+          callback.apply(this,args)
+        },time);
+      }
+    }
+    //防抖函数
+    function handleClick(event){
+      console.log('处理点击事件')
+    }
+    document.getElementById('throttle').onclick=throttle(handleClick,2000)
+    document.getElementById('debounce').onclick=debounce(handleClick,2000)
+
+    
+    function handleClick(event){
+      console.log('处理点击事件')
+    }
+    document.getElementById('throttle_ratio').onclick=throttle_ratio(handleClick,2000)
+    document.getElementById('anti_shake').onclick=anti_shake(handleClick,2000)
+
+    
+    function handleClick(event){
+      console.log('处理点击事件')
+    }
+    document.getElementById('throttleDate').onclick=throttleDate(handleClick,2000)
+    document.getElementById('invalid').onclick=invalid(handleClick,2000)
+  </script>
+</body>
+
+</html>

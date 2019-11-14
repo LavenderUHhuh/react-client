@@ -1,0 +1,1 @@
+export const UPDATE_SEARCH='update_search'
